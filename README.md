@@ -36,6 +36,9 @@ options:
 
 ## Issues
 
+> Why should it work?
+> https://wiki.archlinux.org/title/Activating_numlock_on_bootup
+
 I have tested `NUMLOCKW` on TTY and Wayland, and everything is working fine. However, there are some issues that require attention from the compositor developers:
 
 - **Hyprland**: Does not work at all.

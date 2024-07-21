@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from typing import List, Optional
 from argparse import ArgumentParser
 
 import evdev
@@ -12,7 +13,7 @@ def _check_device_has_numlock(device: evdev.InputDevice) -> bool:
     return EV_KEY in cap and KEY_NUMLOCK in cap[EV_KEY]
 
 
-def _devices() -> list[evdev.InputDevice]:
+def _devices() -> List[evdev.InputDevice]:
     devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
     devices = [device for device in devices if _check_device_has_numlock(device)]
     return devices
@@ -30,14 +31,14 @@ def numlock_led_switch(device: evdev.InputDevice, status: bool):
 
 
 # https://stackoverflow.com/questions/13129804/python-how-to-get-current-keylock-status
-def numlock_get_status(devices: list[evdev.InputDevice]) -> bool:
+def numlock_get_status(devices: List[evdev.InputDevice]) -> bool:
     for device in devices:
         if LED_NUML in device.leds():
             return True
     return False
 
 
-def toggle(target_status: bool = None):
+def toggle(target_status: Optional[bool] = None):
     devices =  _devices()
     status = numlock_get_status(devices)
     if target_status is not None and target_status == status:
