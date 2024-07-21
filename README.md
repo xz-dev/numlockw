@@ -2,7 +2,17 @@
 
 A Wayland Clone of `numlockx`
 
-``` sh
+## Install
+
+To install `NUMLOCKW`, use the following command:
+
+```sh
+pipx install git+https://github.com/xz-dev/numlockw.git
+```
+
+You can then check the available commands with:
+
+```sh
 ❯ numlockw --help
 usage: __main__.py [-h] {on,off,toggle,status}
 
@@ -30,6 +40,7 @@ I have tested `NUMLOCKW` on TTY and Wayland, and everything is working fine. How
 
 - **Hyprland**: Does not work at all.
 - **River**: Works, but avoid using multiple keyboards simultaneously (you can plug them in at the same time, but do not use them concurrently).
+
 
 ## Contributing
 
