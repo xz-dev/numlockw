@@ -17,10 +17,14 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
 
 [project.urls]
 Homepage = "https://github.com/xz-dev/numlockw"
 Issues = "https://github.com/xz-dev/numlockw/issues"
 
 [project.scripts]
-epatch = "numlockx.__main__:main"
+numlockw = "numlockw.__main__:main"

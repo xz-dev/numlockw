@@ -30,3 +30,12 @@ I have tested `NUMLOCKW` on TTY and Wayland, and everything is working fine. How
 
 - **Hyprland**: Does not work at all.
 - **River**: Works, but avoid using multiple keyboards simultaneously (you can plug them in at the same time, but do not use them concurrently).
+
+## Contributing
+
+We warmly welcome contributions from the community. If you find any bugs or have suggestions for improvements, please feel free to [open an issue](https://github.com/xz-dev/numlockw/issues/new/choose).
+
+You're also encouraged to submit pull requests to help make this project better. If you find this project useful, please consider giving it a :star: to show your support!
+
+Thank you for your interest and contributions! :heart:
+
