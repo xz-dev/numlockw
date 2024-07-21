@@ -54,7 +54,7 @@ Refer to the [Activating NumLock on Bootup - ArchWiki](https://wiki.archlinux.or
 2. **Is it working?**:
    - I have tested `NUMLOCKW` on TTY and KDE (Wayland), and everything is working fine. However, there are some issues that require attention from the compositor developers:
      - **Hyprland**: Does not work at all (including LED).
-     - **River**: Works, but avoid using `Alt` or `Ctrl` with multiple keyboards simultaneously (you can plug them in at the same time, but do not use them concurrently).
+     - **River**: Works, but avoid using `Alt` or `Ctrl` with multiple keyboards simultaneously (you can plug them in at the same time, but do not use them concurrently, it's a bug of `River`).
      - **GNOME**: Does not fully work (LED works); no real function, LED is buggy similar to `River`.
 
 ## Contributing
