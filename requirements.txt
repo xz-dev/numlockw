@@ -1,0 +1,2 @@
+evdev==1.7.1
+pywlroots==0.17.0
