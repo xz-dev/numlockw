@@ -1,10 +1,10 @@
-# NUMLOCKW
+# NumLockW
 
 A Wayland Clone of `numlockx`
 
 ## Install
 
-To install `NUMLOCKW`, use the following commands:
+To install `numlockw`, use the following commands:
 
 ```sh
 sudo usermod -a -G plugdev $USER  # For Arch users: Refer to https://wiki.archlinux.org/title/Udev#Allowing_regular_users_to_use_devices
@@ -52,7 +52,7 @@ Refer to the [Activating NumLock on Bootup - ArchWiki](https://wiki.archlinux.or
    - The method described [here](https://stackoverflow.com/questions/13129804/python-how-to-get-current-keylock-status) seems problematic, but no better solution was found.
 
 2. **Is it working?**:
-   - I have tested `NUMLOCKW` on TTY and KDE (Wayland), and everything is working fine. However, there are some issues that require attention from the compositor developers:
+   - I have tested `NumLockW` on TTY and KDE (Wayland), and everything is working fine. However, there are some issues that require attention from the compositor developers:
      - **Hyprland**: Does not work at all (including LED).
      - **River**: Works, but avoid using `Alt` or `Ctrl` with multiple keyboards simultaneously (you can plug them in at the same time, but do not use them concurrently, it's a bug of `River`).
      - **GNOME**: Does not fully work (LED works); no real function, LED is buggy similar to `River`.
