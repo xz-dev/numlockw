@@ -62,17 +62,26 @@ def status():
 
 
 def main():
-    parser = ArgumentParser(description="numlockw is a program to control the NumLock key inside X11 session scripts.")
+    parser = ArgumentParser(description="numlockw is a program to control the NumLock key, designed for use with Wayland and tty environments.")
+    subparsers = parser.add_subparsers(
+        title="actions",
+        description="valid actions",
+        help="action to perform on NumLock",
+        dest="action"
+    )
+    subparsers.required = True
+    parser_on = subparsers.add_parser('on', help="Turn NumLock on")
+    parser_on.set_defaults(func=on)
+    parser_off = subparsers.add_parser('off', help="Turn NumLock off")
+    parser_off.set_defaults(func=off)
+    parser_toggle = subparsers.add_parser('toggle', help="Toggle NumLock")
+    parser_toggle.set_defaults(func=toggle)
+    parser_status = subparsers.add_parser('status', help="Display NumLock status")
+    parser_status.set_defaults(func=status)
+    args = parser.parse_args()
     parser.add_argument("action", choices=["on", "off", "toggle", "status"])
     args = parser.parse_args()
-    if args.action == "on":
-        on()
-    elif args.action == "off":
-        off()
-    elif args.action == "toggle":
-        toggle()
-    elif args.action == "status":
-        status()
+    args.func()
 
 
 if __name__ == "__main__":
