@@ -79,8 +79,6 @@ def main():
     parser_status = subparsers.add_parser('status', help="Display NumLock status")
     parser_status.set_defaults(func=status)
     args = parser.parse_args()
-    parser.add_argument("action", choices=["on", "off", "toggle", "status"])
-    args = parser.parse_args()
     args.func()
 
 
