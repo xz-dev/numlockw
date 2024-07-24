@@ -20,15 +20,47 @@ numlockw --help
 Example output:
 
 ```
-usage: __main__.py [-h] {on, off, toggle, status}
+usage: numlockw [-h] [--device-name DEVICE_NAME] [--pre-hook PRE_HOOK] [--led-only]
+                {on,off,toggle,status,list-devices} ...
 
-numlockw is a program to control the NumLock key inside X11 session scripts.
-
-positional arguments:
-  {on, off, toggle, status}
+numlockw is a program to control the NumLock key, designed for use with Wayland and tty
+environments.
 
 options:
   -h, --help            show this help message and exit
+  --device-name DEVICE_NAME
+                        The name of the input device to use. If not provided, will fake keyboard to
+                        enable NumLock, and enable LDE_NUML on all devices that support it.
+  --pre-hook PRE_HOOK   A command to run when NumLock is toggled. The command will be run with the
+                        status of uinput device name ${{udevice}}.
+  --led-only            Only toggle the LED, do not send key event.
+
+actions:
+  valid actions
+
+  {on,off,toggle,status,list-devices}
+                        action to perform on NumLock
+    on                  Turn NumLock on
+    off                 Turn NumLock off
+    toggle              Toggle NumLock
+    status              Display NumLock status
+    list-devices        List devices that support NumLock
+```
+
+## Use Notes
+
+1. Sometimes, you might need some operation before "Click" NumLock. You can try --pre-hook
+
+``` sh
+numlockw --pre-hook 'echo ${{udevice}}' on  # Print uinput (Fake keyboard) device name
+```
+
+2. If you only want to enable/disable LED by some reason:
+
+``` sh
+numlockw list-devices
+numlockw --led-only off  # For all device
+numlockw --device-name 'AT Translated Set 2 keyboard' --led-only off  # Only for 'AT Translated Set 2 keyboard'
 ```
 
 ## Background
