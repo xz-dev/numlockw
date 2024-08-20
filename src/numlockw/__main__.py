@@ -46,8 +46,11 @@ def numlock_led_switch(device: evdev.InputDevice, status: bool):
 # https://stackoverflow.com/questions/13129804/python-how-to-get-current-keylock-status
 def numlock_get_status(devices: List[evdev.InputDevice]) -> bool:
     for device in devices:
-        if LED_NUML in device.leds():
-            return True
+        try:
+            if LED_NUML in device.leds():
+                return True
+        except SystemError:
+            pass
     return False
 
 
