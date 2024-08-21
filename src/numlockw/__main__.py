@@ -27,7 +27,7 @@ def _check_device_has_numlock(device: evdev.InputDevice) -> bool:
     return EV_KEY in cap and KEY_NUMLOCK in cap[EV_KEY]
 
 
-def _devices(device_name: Optional[str]) -> List[evdev.InputDevice]:
+def _devices(device_name: Optional[str] = None) -> List[evdev.InputDevice]:
     devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
     devices = [device for device in devices if _check_device_has_numlock(device)]
     if device_name is not None:
@@ -58,21 +58,26 @@ def numlock_led_switch(device: evdev.InputDevice, status: bool):
 
 
 # https://stackoverflow.com/questions/13129804/python-how-to-get-current-keylock-status
-def numlock_get_status(devices: List[evdev.InputDevice]) -> bool:
+def numlock_get_status(device: evdev.InputDevice) -> Optional[bool]:
+    try:
+        return LED_NUML in device.leds()
+    except Exception:
+        eprint(f"Error getting LED status for device {device.name}")
+        import traceback
+        eprint(f"Error: {traceback.format_exc()}")
+        return None
+
+
+def numlock_get_status_devices(devices: List[evdev.InputDevice]) -> bool:
     for device in devices:
-        try:
-            if LED_NUML in device.leds():
-                return True
-        except Exception:
-            eprint(f"Error getting LED status for device {device.name}")
-            import traceback
-            eprint(f"Error: {traceback.format_exc()}")
+        if numlock_get_status(device):
+            return True
     return False
 
 
 def toggle(target_status: Optional[bool] = None):
     devices = _devices(device_name)
-    status = numlock_get_status(devices)
+    status = numlock_get_status_devices(devices)
     if target_status is not None and target_status == status:
         return
     if not led_only:
@@ -91,14 +96,15 @@ def off():
 
 def status():
     devices = _devices(device_name)
-    print("NumLock is", "on" if numlock_get_status(devices) else "off")
+    print("NumLock is", "on" if numlock_get_status_devices(devices) else "off")
 
 
 def list_devices():
-    devices = _devices(None)
-    print("Path | Device Name | Physical Topology")
+    devices = _devices()
+    print("Path | Device Name | Physical Topology | LED Status")
     for device in devices:
-        print(device.path, device.name, device.phys, sep=" | ")
+        led_status = numlock_get_status(device)
+        print(device.path, device.name, device.phys, "N/A" if led_status is None else "ON" if led_status else "OFF", sep=" | ")
 
 
 def main():
