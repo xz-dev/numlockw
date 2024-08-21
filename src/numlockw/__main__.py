@@ -12,6 +12,15 @@ device_name = None
 pre_hook = None
 led_only = False
 
+DEBUG = False
+
+
+def eprint(text):
+    if not DEBUG:
+        return
+    import logging
+    logging.warning(text)
+
 
 def _check_device_has_numlock(device: evdev.InputDevice) -> bool:
     cap = device.capabilities()
@@ -40,7 +49,12 @@ def numlock_switch():
 
 
 def numlock_led_switch(device: evdev.InputDevice, status: bool):
-    device.set_led(LED_NUML, 1 if status else 0)
+    try:
+        device.set_led(LED_NUML, 1 if status else 0)
+    except Exception:
+        eprint(f"Error setting LED status for device {device.name}")
+        import traceback
+        eprint(f"Error: {traceback.format_exc()}")
 
 
 # https://stackoverflow.com/questions/13129804/python-how-to-get-current-keylock-status
@@ -49,8 +63,10 @@ def numlock_get_status(devices: List[evdev.InputDevice]) -> bool:
         try:
             if LED_NUML in device.leds():
                 return True
-        except SystemError:
-            pass
+        except Exception:
+            eprint(f"Error getting LED status for device {device.name}")
+            import traceback
+            eprint(f"Error: {traceback.format_exc()}")
     return False
 
 
@@ -87,6 +103,7 @@ def list_devices():
 
 def main():
     parser = ArgumentParser(description="numlockw is a program to control the NumLock key, designed for use with Wayland and tty environments.")
+    parser.add_argument('--debug', action="store_true", help="Enable debug output")
     parser.add_argument('--device-name', type=str, default=None, help="The name of the input device to use. If not provided, will fake keyboard to enable NumLock, and enable LDE_NUML on all devices that support it.")
     parser.add_argument("--pre-hook", type=str, default=None, help="A command to run when NumLock is toggled. The command will be run with the status of uinput device name ${{udevice}}.")
     parser.add_argument("--led-only", action="store_true", help="Only toggle the LED, do not send key event.")
@@ -109,6 +126,10 @@ def main():
     parser_list_devices = subparsers.add_parser('list-devices', help="List devices that support NumLock")
     parser_list_devices.set_defaults(func=list_devices)
     args = parser.parse_args()
+    global DEBUG
+    DEBUG = args.debug
+    if DEBUG:
+        print("Debug mode enabled")
     if args.pre_hook is not None:
         global pre_hook
         pre_hook = args.pre_hook
