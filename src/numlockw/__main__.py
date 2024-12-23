@@ -12,7 +12,7 @@ UINPOUT_DEVICE_NAME = "numlockw-evdev-uinput"
 
 DEBUG = False
 
-device_name = "*"
+device_name = None
 pre_hook = None
 led_force = False
 fake_uinput = True
@@ -31,12 +31,15 @@ def _check_device_has_numlock(device: evdev.InputDevice) -> bool:
     return EV_KEY in cap and KEY_NUMLOCK in cap[EV_KEY]
 
 
-def _devices() -> List[evdev.InputDevice]:
+def _devices(device_name: Optional[str]) -> List[evdev.InputDevice]:
     devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
     devices = [device for device in devices if _check_device_has_numlock(device)]
-    if device_name != "*":
-        devices = [device for device in devices if device.name == device_name]
-    return devices
+    if device_name is None:
+        return devices[:1]
+    elif device_name == "*":
+        return devices
+    else:
+        return [device for device in devices if device.name == device_name]
 
 
 def numlock_switch(devices: List[evdev.InputDevice] = None):
@@ -89,7 +92,7 @@ def numlock_get_status_devices(devices: List[evdev.InputDevice]) -> bool:
 
 
 def toggle(target_status: Optional[bool] = None):
-    devices = _devices()
+    devices = _devices(device_name)
     status = numlock_get_status_devices(devices)
     if target_status is not None and target_status == status:
         return
@@ -107,13 +110,13 @@ def off():
 
 
 def status():
-    devices = _devices()
+    devices = _devices("*" if device_name is None else device_name)
     print("NumLock is", "on" if numlock_get_status_devices(devices) else "off")
 
 
 def list_devices():
     with UInput(name=UINPOUT_DEVICE_NAME):
-        devices = _devices()
+        devices = _devices("*" if device_name is None else device_name)
         print("Path | Device Name | Physical Topology | LED Status")
         for device in devices:
             led_status = numlock_get_status(device)
@@ -135,7 +138,7 @@ def main():
         "--device-name",
         type=str,
         default=None,
-        help="The name of the input device to use. If not provided, will fake keyboard to enable NumLock, and enable LDE_NUML on all devices that support it.",
+        help='The name of the input device or "*" for each one. If not provided, will fake keyboard to enable NumLock, and enable LDE_NUML on all devices that support it.',
     )
     parser.add_argument(
         "--no-fake-uinput",
