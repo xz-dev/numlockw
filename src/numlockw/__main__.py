@@ -4,8 +4,8 @@ from typing import List, Optional
 from argparse import ArgumentParser
 
 import evdev
-from evdev import UInput, InputEvent
-from evdev.ecodes import KEY_NUMLOCK, LED_NUML, EV_KEY
+from evdev import UInput
+from evdev.ecodes import KEY_NUMLOCK, LED_NUML, EV_KEY, EV_SYN, SYN_REPORT
 
 
 UINPOUT_DEVICE_NAME = "numlockw-evdev-uinput"
@@ -40,7 +40,6 @@ def _devices() -> List[evdev.InputDevice]:
 
 
 def numlock_switch(devices: List[evdev.InputDevice] = None):
-    ev = InputEvent(1334414993, 274296, EV_KEY, KEY_NUMLOCK, 1)
     if fake_uinput:
         devices = [UInput(name=UINPOUT_DEVICE_NAME)]
     else:
@@ -51,7 +50,10 @@ def numlock_switch(devices: List[evdev.InputDevice] = None):
 
             command_str = pre_hook.replace("${{udevice}}", ui.name)
             subprocess.run(command_str, shell=True)
-        ui.write_event(ev)
+        ui.write(EV_KEY, KEY_NUMLOCK, 1)
+        ui.write(EV_SYN, SYN_REPORT, 0)
+        ui.write(EV_KEY, KEY_NUMLOCK, 0)
+        ui.write(EV_SYN, SYN_REPORT, 0)
         ui.close()
 
 
