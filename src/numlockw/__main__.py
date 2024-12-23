@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-from typing import List, Optional
+import time
 from argparse import ArgumentParser
+from typing import List, Optional
 
 import evdev
 from evdev import UInput
-from evdev.ecodes import KEY_NUMLOCK, LED_NUML, EV_KEY, EV_SYN, SYN_REPORT
-
+from evdev.ecodes import EV_KEY, EV_SYN, KEY_NUMLOCK, LED_NUML, SYN_REPORT
 
 UINPOUT_DEVICE_NAME = "numlockw-evdev-uinput"
 
@@ -52,6 +52,7 @@ def numlock_switch(devices: List[evdev.InputDevice] = None):
             subprocess.run(command_str, shell=True)
         ui.write(EV_KEY, KEY_NUMLOCK, 1)
         ui.write(EV_SYN, SYN_REPORT, 0)
+        time.sleep(0.05)  # 50ms, avoid GNOME key debounce
         ui.write(EV_KEY, KEY_NUMLOCK, 0)
         ui.write(EV_SYN, SYN_REPORT, 0)
         ui.close()

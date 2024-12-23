@@ -94,8 +94,8 @@ Refer to the [Activating NumLock on Bootup - ArchWiki](https://wiki.archlinux.or
 
 2. **Is it working?** (welcome add more):
    - I have tested `NumLockW` on TTY, KDE (Wayland) and Hyprland, and everything is working fine. However, there are some issues that require attention from the compositor developers:
-     - **River**: Works, but avoid using `Alt` or `Ctrl` with multiple keyboards simultaneously (you can plug them in at the same time, but do not use them concurrently, it's a bug of `River`).
-     - **GNOME**: Can OFF but can not ON, OFF command: `numlockw --device-name 'AT Translated Set 2 keyboard' off`
+     - **River**: Work, but avoid using `Alt` or `Ctrl` with multiple keyboards simultaneously (you can plug them in at the same time, but do not use them concurrently, it's a bug of `River`).
+     - **GNOME**: Work, but you must choice an exist keyboard, like: `numlockw --device-name 'AT Translated Set 2 keyboard' on`
 
 ## Contributing
 
