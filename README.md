@@ -92,11 +92,10 @@ Refer to the [Activating NumLock on Bootup - ArchWiki](https://wiki.archlinux.or
 1. **Sync status on LED and actual state**:
    - The method described [here](https://stackoverflow.com/questions/13129804/python-how-to-get-current-keylock-status) seems problematic, but no better solution was found.
 
-2. **Is it working?**:
-   - I have tested `NumLockW` on TTY and KDE (Wayland), and everything is working fine. However, there are some issues that require attention from the compositor developers:
-     - **Hyprland**: Work (including LED).
+2. **Is it working?** (welcome add more):
+   - I have tested `NumLockW` on TTY, KDE (Wayland) and Hyprland, and everything is working fine. However, there are some issues that require attention from the compositor developers:
      - **River**: Works, but avoid using `Alt` or `Ctrl` with multiple keyboards simultaneously (you can plug them in at the same time, but do not use them concurrently, it's a bug of `River`).
-     - **GNOME**: Not test, But it *should* work. Because I don't have a test environment anymore, but the previous version test failed.
+     - **GNOME**: Can OFF but can not ON, OFF command: `numlockw --device-name 'AT Translated Set 2 keyboard' off`
 
 ## Contributing
 
