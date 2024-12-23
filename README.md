@@ -17,23 +17,28 @@ You can then check the available commands with:
 numlockw --help
 ```
 
+And simply run:
+```sh
+numlockw on
+```
+
 Example output:
 
 ```
-usage: numlockw [-h] [--device-name DEVICE_NAME] [--pre-hook PRE_HOOK] [--led-only]
+usage: numlockw [-h] [--debug] [--device-name DEVICE_NAME] [--no-fake-uinput] [--pre-hook PRE_HOOK] [--force-led]
                 {on,off,toggle,status,list-devices} ...
 
-numlockw is a program to control the NumLock key, designed for use with Wayland and tty
-environments.
+numlockw is a program to control the NumLock key, designed for use with Wayland and tty environments.
 
 options:
   -h, --help            show this help message and exit
+  --debug               Enable debug output
   --device-name DEVICE_NAME
-                        The name of the input device to use. If not provided, will fake keyboard to
-                        enable NumLock, and enable LDE_NUML on all devices that support it.
-  --pre-hook PRE_HOOK   A command to run when NumLock is toggled. The command will be run with the
-                        status of uinput device name ${{udevice}}.
-  --led-only            Only toggle the LED, do not send key event.
+                        The name of the input device to use. If not provided, will fake keyboard to enable NumLock, and enable LDE_NUML on all
+                        devices that support it.
+  --no-fake-uinput      Do not fake uinput device, use real devices
+  --pre-hook PRE_HOOK   A command to run when NumLock is toggled. The command will be run with the status of uinput device name ${{udevice}}.
+  --force-led           Force setting LED_NUML on all devices that support it, not dependent system to set it.
 
 actions:
   valid actions
@@ -51,16 +56,20 @@ actions:
 
 1. Sometimes, you might need some operation before "Click" NumLock. You can try --pre-hook
 
-``` sh
+```sh
 numlockw --pre-hook 'echo ${{udevice}}' on  # Print uinput (Fake keyboard) device name
 ```
 
-2. If you only want to enable/disable LED by some reason:
+2. Choice exist(real) keyboard to "Click" NumLock:
+```sh
+numlockw --device-name 'AT Translated Set 2 keyboard' on
+```
 
-``` sh
+3. If you want to **Force** enable/disable LED with switch NumLock by some reason:
+
+```sh
 numlockw list-devices
-numlockw --led-only off  # For all device
-numlockw --device-name 'AT Translated Set 2 keyboard' --led-only off  # Only for 'AT Translated Set 2 keyboard'
+numlockw --device-name 'AT Translated Set 2 keyboard' --force-led on  # Only for 'AT Translated Set 2 keyboard'
 ```
 
 ## Background
@@ -85,9 +94,9 @@ Refer to the [Activating NumLock on Bootup - ArchWiki](https://wiki.archlinux.or
 
 2. **Is it working?**:
    - I have tested `NumLockW` on TTY and KDE (Wayland), and everything is working fine. However, there are some issues that require attention from the compositor developers:
-     - **Hyprland**: Does not work at all (including LED).
+     - **Hyprland**: Work (including LED).
      - **River**: Works, but avoid using `Alt` or `Ctrl` with multiple keyboards simultaneously (you can plug them in at the same time, but do not use them concurrently, it's a bug of `River`).
-     - **GNOME**: Does not fully work (LED works); no real function, LED is buggy similar to `River`.
+     - **GNOME**: Not test, But it *should* work. Because I don't have a test environment anymore, but the previous version test failed.
 
 ## Contributing
 
