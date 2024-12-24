@@ -93,7 +93,8 @@ Refer to the [Activating NumLock on Bootup - ArchWiki](https://wiki.archlinux.or
    - The method described [here](https://stackoverflow.com/questions/13129804/python-how-to-get-current-keylock-status) seems problematic, but no better solution was found.
 
 2. **Is it working?** (welcome add more):
-   - I have tested `NumLockW` on TTY, KDE (Wayland) and Hyprland, and everything is working fine. However, there are some issues that require attention from the compositor developers:
+   - I have tested `NumLockW` on TTY, KDE (Wayland) and Hyprland, and everything is working fine.
+   - However, there are some issues that require attention from the compositor developers:
      - **River**: Work. Recommend select an exist devices. **Bug of River**: avoid using `Alt` or `Ctrl` with multiple keyboards simultaneously (you can plug them in at the same time, but do not use them concurrently, it's a [bug](https://codeberg.org/river/river/issues/1120) of `River`).
      - **GNOME**: Work. But you must choice an exist keyboard, like: `numlockw --device-name 'AT Translated Set 2 keyboard' on`
 
