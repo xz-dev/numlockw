@@ -8,7 +8,7 @@ To install `numlockw`, use the following commands:
 
 ```sh
 sudo usermod -a -G plugdev $USER  # For Arch users: Refer to https://wiki.archlinux.org/title/Udev#Allowing_regular_users_to_use_devices
-pipx install git+https://github.com/xz-dev/numlockw.git
+pipx install numlockw # or pipx install git+https://github.com/xz-dev/numlockw.git
 ```
 
 You can then check the available commands with:
@@ -94,8 +94,8 @@ Refer to the [Activating NumLock on Bootup - ArchWiki](https://wiki.archlinux.or
 
 2. **Is it working?** (welcome add more):
    - I have tested `NumLockW` on TTY, KDE (Wayland) and Hyprland, and everything is working fine. However, there are some issues that require attention from the compositor developers:
-     - **River**: Work, but avoid using `Alt` or `Ctrl` with multiple keyboards simultaneously (you can plug them in at the same time, but do not use them concurrently, it's a bug of `River`).
-     - **GNOME**: Work, but you must choice an exist keyboard, like: `numlockw --device-name 'AT Translated Set 2 keyboard' on`
+     - **River**: Work. Recommend select an exist devices. **Bug of River**: avoid using `Alt` or `Ctrl` with multiple keyboards simultaneously (you can plug them in at the same time, but do not use them concurrently, it's a [bug](https://codeberg.org/river/river/issues/1120) of `River`).
+     - **GNOME**: Work. But you must choice an exist keyboard, like: `numlockw --device-name 'AT Translated Set 2 keyboard' on`
 
 ## Contributing
 
