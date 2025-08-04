@@ -117,6 +117,13 @@ Refer to the [Activating NumLock on Bootup - ArchWiki](https://wiki.archlinux.or
        ```
      - **GNOME**: Work. But you must choice an exist keyboard, like: `numlockw --device-name 'AT Translated Set 2 keyboard' on`
 
+3. Set udev rules for Debian ([issues #2](https://github.com/xz-dev/numlockw/issues/2#issuecomment-3148567049)):
+   - Add file `/etc/udev/rules.d/10-uinput.rules`
+     ```
+     KERNEL=="uinput", SUBSYSTEM=="misc", OPTIONS+="static_node=uinput", TAG+="uaccess", GROUP="input", MODE="0660"
+     ```
+   - Then reboot
+
 ## Contributing
 
 We warmly welcome contributions from the community. If you find any bugs or have suggestions for improvements, please feel free to [open an issue](https://github.com/xz-dev/numlockw/issues/new/choose).
