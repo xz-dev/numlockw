@@ -1,0 +1,20 @@
+version = 1
+revision = 3
+requires-python = ">=3.7"
+
+[[package]]
+name = "evdev"
+version = "1.7.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/12/bb/f622a8a5e64d46ca83020a761877c0ead19140903c9aaf1431f3c531fdf6/evdev-1.7.1.tar.gz", hash = "sha256:0c72c370bda29d857e188d931019c32651a9c1ea977c08c8d939b1ced1637fde", size = 30705, upload-time = "2024-05-07T23:02:35.997Z" }
+
+[[package]]
+name = "numlockw"
+version = "0.1.3"
+source = { editable = "." }
+dependencies = [
+    { name = "evdev" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "evdev", specifier = "==1.7.1" }]

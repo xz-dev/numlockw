@@ -2,6 +2,14 @@
 
 A Wayland Clone of `numlockx`
 
+## Debug
+
+Enable debug mode via environment variable to see detailed logs for troubleshooting:
+
+```sh
+NUMLOCKW_DEBUG=1 numlockw on
+```
+
 ## Install
 
 To install `numlockw`, use the following commands:
@@ -25,14 +33,13 @@ numlockw on
 Example output:
 
 ```
-usage: numlockw [-h] [--debug] [--device-name DEVICE_NAME] [--no-fake-uinput] [--pre-hook PRE_HOOK] [--force-led]
+usage: numlockw [-h] [--device-name DEVICE_NAME] [--no-fake-uinput] [--pre-hook PRE_HOOK] [--force-led]
                 {on,off,toggle,status,list-devices} ...
 
 numlockw is a program to control the NumLock key, designed for use with Wayland and tty environments.
 
 options:
   -h, --help            show this help message and exit
-  --debug               Enable debug output
   --device-name DEVICE_NAME
                         The name of the input device to use. If not provided, will fake keyboard to enable NumLock, and enable LDE_NUML on all
                         devices that support it.
