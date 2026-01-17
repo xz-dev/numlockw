@@ -67,17 +67,26 @@ def _devices(device_name: Optional[str]) -> List[evdev.InputDevice]:
 
     _debug(f"Found {len(devices)} devices with NumLock capability")
 
+    result = []
     if device_name is None:
         result = devices[:1]
         _debug(f"No device filter specified, using first device only: {[d.name for d in result]}")
-        return result
     elif device_name == "*":
+        result = devices
         _debug(f"Using all {len(devices)} NumLock-capable devices")
-        return devices
     else:
         result = [device for device in devices if device.name == device_name]
         _debug(f"Filtered by name '{device_name}': found {len(result)} matching devices")
-        return result
+    if not result:
+        if device_name is None or device_name == "*":
+            raise KeyError("No NumLock-capable devices found")
+        else:
+            available = [d.name for d in devices]
+            raise KeyError(
+                f"Device '{device_name}' not found. "
+                f"Available NumLock-capable devices: {available}"
+            )
+    return result
 
 
 def numlock_switch(devices: List[evdev.InputDevice] = None):
