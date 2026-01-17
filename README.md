@@ -101,6 +101,7 @@ Refer to the [Activating NumLock on Bootup - ArchWiki](https://wiki.archlinux.or
 
 2. **Is it working?** (welcome add more):
    - I have tested `NumLockW` on TTY, KDE (Wayland) and Hyprland, and everything is working fine.
+   - **Qtile**: Work. Confirmed by user ([issue #3](https://github.com/xz-dev/numlockw/issues/3)).
    - However, there are some issues that require attention from the compositor developers:
      - **River**: Work. Recommend select an exist devices. **[Issue](https://codeberg.org/river/river/issues/1120) of River**: Add all your keyboards to a keyboard group in `~/.config/river/init`, like:
        ```sh
