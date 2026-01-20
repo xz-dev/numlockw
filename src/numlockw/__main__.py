@@ -70,16 +70,20 @@ def _devices(device_name: Optional[str]) -> List[evdev.InputDevice]:
     result = []
     if device_name is None:
         result = devices[:1]
-        _debug(f"No device filter specified, using first device only: {[d.name for d in result]}")
+        _debug(
+            f"No device filter specified, using first device only: {[d.name for d in result]}"
+        )
     elif device_name == "*":
         result = devices
         _debug(f"Using all {len(devices)} NumLock-capable devices")
     else:
         result = [device for device in devices if device.name == device_name]
-        _debug(f"Filtered by name '{device_name}': found {len(result)} matching devices")
+        _debug(
+            f"Filtered by name '{device_name}': found {len(result)} matching devices"
+        )
     if not result:
         if device_name is None or device_name == "*":
-            raise KeyError("No NumLock-capable devices found")
+            raise LookupError("No NumLock-capable devices found")
         else:
             available = [d.name for d in devices]
             raise KeyError(
@@ -87,6 +91,25 @@ def _devices(device_name: Optional[str]) -> List[evdev.InputDevice]:
                 f"Available NumLock-capable devices: {available}"
             )
     return result
+
+
+def _wait_for_device(target_name: str, interval: float = 1.0):
+    """Wait indefinitely for a device with the specified name to become available."""
+    _debug(f"Waiting for device '{target_name}' to become available...")
+    times = 0
+    while True:
+        times += 1
+        try:
+            _devices(target_name)
+            _debug(
+                f"Device '{target_name}' is now available (after {times} attempt(s))"
+            )
+            return
+        except (LookupError, KeyError):
+            _debug(
+                f"Device '{target_name}' not found (attempt {times}), retrying in {interval}s..."
+            )
+            time.sleep(interval)
 
 
 def numlock_switch(devices: List[evdev.InputDevice] = None):
@@ -127,7 +150,9 @@ def numlock_switch(devices: List[evdev.InputDevice] = None):
 
 
 def numlock_led_switch(devices: List[evdev.InputDevice], status: bool):
-    _debug(f"numlock_led_switch called: setting LED to {'ON' if status else 'OFF'} on {len(devices)} device(s)")
+    _debug(
+        f"numlock_led_switch called: setting LED to {'ON' if status else 'OFF'} on {len(devices)} device(s)"
+    )
     for device in devices:
         _debug(f"Setting LED_NUML to {1 if status else 0} on device '{device.name}'")
         try:
@@ -144,7 +169,9 @@ def numlock_get_status(device: evdev.InputDevice) -> Optional[bool]:
     try:
         leds = device.leds()
         status = LED_NUML in leds
-        _debug(f"Device '{device.name}' LED status: {'ON' if status else 'OFF'} (active LEDs: {list(leds)})")
+        _debug(
+            f"Device '{device.name}' LED status: {'ON' if status else 'OFF'} (active LEDs: {list(leds)})"
+        )
         return status
     except Exception:
         _warn(f"Error getting LED status for device {device.name}")
@@ -173,14 +200,18 @@ def toggle(target_status: Optional[bool] = None):
     _debug(f"Current NumLock status: {'ON' if status else 'OFF'}")
 
     if target_status is not None and target_status == status:
-        _debug(f"Target status {target_status} matches current status, no action needed")
+        _debug(
+            f"Target status {target_status} matches current status, no action needed"
+        )
         return
 
     _debug(f"Status mismatch or no target specified, switching NumLock")
     numlock_switch(devices)
 
     if led_force:
-        _debug(f"force-led enabled, manually setting LED to {'ON' if not status else 'OFF'}")
+        _debug(
+            f"force-led enabled, manually setting LED to {'ON' if not status else 'OFF'}"
+        )
         numlock_led_switch(devices, not status)
     else:
         _debug(f"force-led disabled, LED will be set by system")
@@ -258,6 +289,11 @@ def main():
         action="store_true",
         help="Force setting LED_NUML on all devices that support it, not dependent system to set it.",
     )
+    parser.add_argument(
+        "--wait-dev",
+        action="store_true",
+        help="Wait indefinitely for the device specified by --device-name to become available. Useful in init scripts where devices may not be ready yet.",
+    )
     subparsers = parser.add_subparsers(
         title="actions",
         description="valid actions",
@@ -306,8 +342,18 @@ def main():
         fake_uinput = False
         _debug(f"Configuration: fake_uinput disabled via --no-fake-uinput")
 
-    _debug(f"Final configuration: device_name={device_name!r}, fake_uinput={fake_uinput}, led_force={led_force}, pre_hook={pre_hook!r}")
+    if args.wait_dev:
+        if device_name is None:
+            parser.error("--wait-dev requires --device-name to be specified")
+        _debug(f"Configuration: wait_dev enabled")
+
+    _debug(
+        f"Final configuration: device_name={device_name!r}, fake_uinput={fake_uinput}, led_force={led_force}, pre_hook={pre_hook!r}"
+    )
     _debug("-" * 60)
+
+    if args.wait_dev:
+        _wait_for_device(device_name)
 
     # Call the function set by set_defaults in subparser
     _debug(f"Executing action: {args.action}")
