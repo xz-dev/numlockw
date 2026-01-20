@@ -34,7 +34,7 @@ Example output:
 
 ```
 usage: numlockw [-h] [--device-name DEVICE_NAME] [--no-fake-uinput]
-                [--pre-hook PRE_HOOK] [--force-led]
+                [--pre-hook PRE_HOOK] [--force-led] [--wait-dev]
                 {on,off,toggle,status,list-devices} ...
 
 numlockw is a program to control the NumLock key, designed for use with
@@ -52,6 +52,9 @@ options:
                         ${{udevice}}.
   --force-led           Force setting LED_NUML on all devices that support it,
                         not dependent system to set it.
+  --wait-dev            Wait indefinitely for the device specified by
+                        --device-name to become available. Useful in init
+                        scripts where devices may not be ready yet.
 
 actions:
   valid actions
