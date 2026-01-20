@@ -237,6 +237,7 @@ def main():
     )
     parser.add_argument(
         "--device-name",
+        "--dev",
         type=str,
         default=None,
         help='The name of the input device or "*" for each one. If not provided, will fake keyboard to enable NumLock, and enable LDE_NUML on all devices that support it.',

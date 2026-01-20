@@ -33,19 +33,25 @@ numlockw on
 Example output:
 
 ```
-usage: numlockw [-h] [--device-name DEVICE_NAME] [--no-fake-uinput] [--pre-hook PRE_HOOK] [--force-led]
+usage: numlockw [-h] [--device-name DEVICE_NAME] [--no-fake-uinput]
+                [--pre-hook PRE_HOOK] [--force-led]
                 {on,off,toggle,status,list-devices} ...
 
-numlockw is a program to control the NumLock key, designed for use with Wayland and tty environments.
+numlockw is a program to control the NumLock key, designed for use with
+Wayland and tty environments.
 
 options:
   -h, --help            show this help message and exit
-  --device-name DEVICE_NAME
-                        The name of the input device to use. If not provided, will fake keyboard to enable NumLock, and enable LDE_NUML on all
-                        devices that support it.
+  --device-name, --dev DEVICE_NAME
+                        The name of the input device or "*" for each one. If
+                        not provided, will fake keyboard to enable NumLock,
+                        and enable LDE_NUML on all devices that support it.
   --no-fake-uinput      Do not fake uinput device, use real devices
-  --pre-hook PRE_HOOK   A command to run when NumLock is toggled. The command will be run with the status of uinput device name ${{udevice}}.
-  --force-led           Force setting LED_NUML on all devices that support it, not dependent system to set it.
+  --pre-hook PRE_HOOK   A command to run when NumLock is toggled. The command
+                        will be run with the status of uinput device name
+                        ${{udevice}}.
+  --force-led           Force setting LED_NUML on all devices that support it,
+                        not dependent system to set it.
 
 actions:
   valid actions
