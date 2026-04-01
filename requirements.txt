@@ -1,1 +1,1 @@
-evdev==1.9.3
+evdev @ git+https://github.com/xz-dev/python-evdev.git@feat/inputdevice-readonly

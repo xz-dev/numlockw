@@ -49,15 +49,19 @@ def _check_device_has_numlock(device: evdev.InputDevice) -> bool:
     return has_numlock
 
 
-def _devices(device_name: Optional[str]) -> List[evdev.InputDevice]:
-    _debug(f"Enumerating input devices (filter: {device_name!r})")
-    all_paths = evdev.list_devices()
+def _devices(
+    device_name: Optional[str], readonly_mode: bool = False
+) -> List[evdev.InputDevice]:
+    _debug(
+        f"Enumerating input devices (filter: {device_name!r}, readonly_mode={readonly_mode})"
+    )
+    all_paths = evdev.list_devices(writable=not readonly_mode)
     _debug(f"Found {len(all_paths)} total input devices")
 
     devices = []
     for path in all_paths:
         _debug(f"Opening device: {path}")
-        device = evdev.InputDevice(path)
+        device = evdev.InputDevice(path, readonly=readonly_mode)
         _debug(f"  Device name: '{device.name}', phys: '{device.phys}'")
         if _check_device_has_numlock(device):
             devices.append(device)
@@ -230,10 +234,13 @@ def off():
 
 
 def status():
+    # Use readonly=True to avoid O_RDWR open which can trigger LED re-assertion
+    # on certain hardware (e.g. Tuxedo Stellaris touchpad LED pulsing).
+    # See: https://www.reddit.com/r/tuxedocomputers/comments/1rtj3c9/numlockw_status_causes_touchpad_led_to_pulse/
     _debug("status() called - checking NumLock status")
     filter_name = "*" if device_name is None else device_name
     _debug(f"Using device filter: {filter_name!r}")
-    devices = _devices(filter_name)
+    devices = _devices(filter_name, readonly_mode=True)
     current_status = numlock_get_status_devices(devices)
     _debug(f"Final status: {'ON' if current_status else 'OFF'}")
     print("NumLock is", "on" if current_status else "off")
