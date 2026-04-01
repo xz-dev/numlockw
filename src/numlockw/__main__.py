@@ -61,9 +61,9 @@ def _devices(device_name: Optional[str]) -> List[evdev.InputDevice]:
         _debug(f"  Device name: '{device.name}', phys: '{device.phys}'")
         if _check_device_has_numlock(device):
             devices.append(device)
-            _debug(f"  -> Added to NumLock-capable devices list")
+            _debug("  -> Added to NumLock-capable devices list")
         else:
-            _debug(f"  -> Skipped (no NumLock capability)")
+            _debug("  -> Skipped (no NumLock capability)")
 
     _debug(f"Found {len(devices)} devices with NumLock capability")
 
@@ -117,7 +117,7 @@ def numlock_switch(devices: List[evdev.InputDevice] = None):
     if fake_uinput:
         _debug(f"Creating fake UInput device: '{UINPOUT_DEVICE_NAME}'")
         devices = [UInput(name=UINPOUT_DEVICE_NAME)]
-        _debug(f"Fake UInput device created successfully")
+        _debug("Fake UInput device created successfully")
     else:
         _debug(f"Using {len(devices)} real device(s)")
 
@@ -135,14 +135,14 @@ def numlock_switch(devices: List[evdev.InputDevice] = None):
         _debug(f"Sending KEY_NUMLOCK press event to '{ui.name}'")
         ui.write(EV_KEY, KEY_NUMLOCK, 1)
         ui.write(EV_SYN, SYN_REPORT, 0)
-        _debug(f"KEY_NUMLOCK press sent, waiting 50ms for GNOME debounce")
+        _debug("KEY_NUMLOCK press sent, waiting 50ms for GNOME debounce")
 
         time.sleep(0.05)  # 50ms, avoid GNOME key debounce
 
         _debug(f"Sending KEY_NUMLOCK release event to '{ui.name}'")
         ui.write(EV_KEY, KEY_NUMLOCK, 0)
         ui.write(EV_SYN, SYN_REPORT, 0)
-        _debug(f"KEY_NUMLOCK release sent")
+        _debug("KEY_NUMLOCK release sent")
 
         _debug(f"Closing device '{ui.name}'")
         ui.close()
@@ -186,7 +186,7 @@ def numlock_get_status_devices(devices: List[evdev.InputDevice]) -> bool:
         if status:
             _debug(f"Found NumLock ON on device '{device.name}', returning True")
             return True
-    _debug(f"NumLock is OFF on all devices")
+    _debug("NumLock is OFF on all devices")
     return False
 
 
@@ -205,7 +205,7 @@ def toggle(target_status: Optional[bool] = None):
         )
         return
 
-    _debug(f"Status mismatch or no target specified, switching NumLock")
+    _debug("Status mismatch or no target specified, switching NumLock")
     numlock_switch(devices)
 
     if led_force:
@@ -214,9 +214,9 @@ def toggle(target_status: Optional[bool] = None):
         )
         numlock_led_switch(devices, not status)
     else:
-        _debug(f"force-led disabled, LED will be set by system")
+        _debug("force-led disabled, LED will be set by system")
 
-    _debug(f"toggle completed")
+    _debug("toggle completed")
 
 
 def on():
@@ -241,9 +241,9 @@ def status():
 
 def list_devices():
     _debug("list_devices() called")
-    _debug(f"Creating temporary UInput device for enumeration")
+    _debug("Creating temporary UInput device for enumeration")
     with UInput(name=UINPOUT_DEVICE_NAME):
-        _debug(f"UInput device created")
+        _debug("UInput device created")
         filter_name = "*" if device_name is None else device_name
         _debug(f"Using device filter: {filter_name!r}")
         devices = _devices(filter_name)
@@ -332,20 +332,20 @@ def main():
         device_name = args.device_name
         fake_uinput = False
         _debug(f"Configuration: device_name set to '{device_name}'")
-        _debug(f"Configuration: fake_uinput disabled (using real device)")
+        _debug("Configuration: fake_uinput disabled (using real device)")
 
     if args.force_led:
         led_force = True
-        _debug(f"Configuration: force_led enabled")
+        _debug("Configuration: force_led enabled")
 
     if args.no_fake_uinput:
         fake_uinput = False
-        _debug(f"Configuration: fake_uinput disabled via --no-fake-uinput")
+        _debug("Configuration: fake_uinput disabled via --no-fake-uinput")
 
     if args.wait_dev:
         if device_name is None:
             parser.error("--wait-dev requires --device-name to be specified")
-        _debug(f"Configuration: wait_dev enabled")
+        _debug("Configuration: wait_dev enabled")
 
     _debug(
         f"Final configuration: device_name={device_name!r}, fake_uinput={fake_uinput}, led_force={led_force}, pre_hook={pre_hook!r}"
