@@ -120,7 +120,8 @@ def main():
         description="Hold evdev input devices open to prevent LED pulsing on affected hardware."
     )
     parser.add_argument(
-        "--quiet", "-q",
+        "--quiet",
+        "-q",
         action="store_true",
         help="Only show warnings and errors.",
     )
