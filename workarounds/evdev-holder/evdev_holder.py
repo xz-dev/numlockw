@@ -57,13 +57,9 @@ def open_device(path):
         return None
 
 
-def fd_is_alive(fd):
-    """Check if a held fd is still valid (device not unplugged)."""
-    try:
-        os.fstat(fd)
-        return True
-    except OSError:
-        return False
+def device_is_alive(path):
+    """Check if a device path still exists (udev removes it on unplug)."""
+    return os.path.exists(path)
 
 
 def close_fd(fd):
@@ -83,7 +79,7 @@ class EvdevHolder:
     def scan(self):
         """Open any new devices not already held. Drop dead ones."""
         # prune dead fds
-        dead = [p for p, fd in self.held.items() if not fd_is_alive(fd)]
+        dead = [p for p in self.held if not device_is_alive(p)]
         for path in dead:
             log.info("device removed: %s", path)
             close_fd(self.held.pop(path))
