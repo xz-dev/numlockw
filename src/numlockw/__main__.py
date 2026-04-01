@@ -234,9 +234,9 @@ def off():
 
 
 def status():
-    # Use readonly=True to avoid O_RDWR open which can trigger LED re-assertion
-    # on certain hardware (e.g. Tuxedo Stellaris touchpad LED pulsing).
-    # See: https://www.reddit.com/r/tuxedocomputers/comments/1rtj3c9/numlockw_status_causes_touchpad_led_to_pulse/
+    # Use readonly=True to skip the unnecessary O_RDWR attempt when only
+    # reading LED state. For the LED pulsing fix on affected hardware
+    # (e.g. Tuxedo Stellaris), see workarounds/evdev-holder/.
     _debug("status() called - checking NumLock status")
     filter_name = "*" if device_name is None else device_name
     _debug(f"Using device filter: {filter_name!r}")
